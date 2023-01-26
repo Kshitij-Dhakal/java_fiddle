@@ -16,19 +16,24 @@ public class GroupRoutes {
         var csv = loadCsv("source.csv");
         var routes = csvToRoutes(csv);
         var groupedRoutes = groupRoutes(routes);
-        writeToFile("out.csv", toBytes(groupedRoutes));
+        writeToFile("out.conf", format(groupedRoutes).getBytes());
+    }
+
+    private static String format(List<RouteDetail> groupedRoutes) {
+        var format = """
+                location %s {
+                    proxy_pass http://%s_server;
+                }
+                """;
+        return groupedRoutes
+                .stream()
+                .map(it -> String.format(format, it.route().trim(), it.handler().trim()))
+                .collect(Collectors.joining("\n\n"));
     }
 
     @SneakyThrows
     private static void writeToFile(String out, byte[] bytes) {
         Files.write(bytes, new File(out));
-    }
-
-    private static byte[] toBytes(List<RouteDetail> routes) {
-        return routes.stream()
-                .map(it -> String.format("%s, %s", it.route(), it.handler()))
-                .collect(Collectors.joining("\n"))
-                .getBytes();
     }
 
     public static List<RouteDetail> csvToRoutes(String csv) {
@@ -150,7 +155,11 @@ public class GroupRoutes {
                         filteredRoutes.put(it.route(), it);
                     }
                 });
-        return new ArrayList<>(filteredRoutes.values());
+        return new ArrayList<>(filteredRoutes.values())
+                .stream()
+                .sorted((o1, o2) -> Integer
+                        .compare(o2.route().split("/").length, o1.route().split("/").length))
+                .toList();
     }
 
     private static String firstPart(RouteDetail it) {
