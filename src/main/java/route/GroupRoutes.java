@@ -2,13 +2,12 @@ package route;
 
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GroupRoutes {

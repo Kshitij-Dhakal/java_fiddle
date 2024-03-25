@@ -1,4 +1,3 @@
 package route;
 
-record RouteDetail(String route, String handler) {
-}
+record RouteDetail(String route, String handler) {}
