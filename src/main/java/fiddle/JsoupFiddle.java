@@ -1,12 +1,9 @@
 package fiddle;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.jsoup.Jsoup;
 
 public class JsoupFiddle {
   public static void main(String[] args) throws IOException {
