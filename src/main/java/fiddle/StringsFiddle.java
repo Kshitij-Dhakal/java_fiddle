@@ -1,42 +1,30 @@
 package fiddle;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import org.apache.commons.lang3.StringUtils;
 
 public class StringsFiddle {
   public static void main(String[] args) {
-        String intro = "Hello world!";
-        System.out.println(intro.substring(0, intro.length() - 1));
+    String str =
+        "This rule will affect 12 transactions.\n" + "\n" + "Would you like to apply the rule?";
+    System.out.println(
+        str.matches("This rule will affect \\d+ transactions\\.\\n+Would you like to apply the rule\\?"));
 
-        var str1 = new String("?".getBytes(), StandardCharsets.UTF_8);
-        var str2 = new String("?".getBytes(), StandardCharsets.US_ASCII);
-        System.out.println(str1.equals(str2));
-        System.out.println("?".equals("?"));
+    System.out.println("Always ignore transactions from Credit Card (**1356)".matches("Always ignore transactions from .*"));
+    System.out.println("Always mark Credit Card (**1356) transactions as recurring".matches("Always mark .* transactions as recurring"));
+    System.out.println("Always modify 'Credit Card (**1356)' transactions as follows: a) set to 'ignore' and b) mark as recurring".matches("Always modify '.*' transactions as follows: a\\) set to 'ignore' and b\\) mark as recurring"));
+    System.out.println(("Always modify 'Credit Card (**1356)' transactions as follows: a) categorize " +
+            "as 'Auto & Transport', b) prioritize as 'must-have', c) set to 'ignore', d) mark as " +
+            "recurring, and e) label as 'Birthday'")
+            .matches("Always modify '.*' transactions as follows: a\\) categorize " +
+            "as '.*', b\\) prioritize as 'must-have', c\\) set to 'ignore', d\\) mark as " +
+            "recurring, and e\\) label as '.*'"));
+  }
 
-        System.out.println(
-            getAlphaNumericCharactersOnly(
-                "DEV post ? States Where Unemployment Claims Are Decreasing the Most_1"));
-
-        System.out.println(
-            "Save $431* with the Capital One SavorOne Cash Rewards Credit Card"
-                .matches("^Save \\$\\d+\\* with the Capital One SavorOne Cash Rewards Credit Card$"));
-
-    System.out.println(charToStringWithEncoding(8211, StandardCharsets.UTF_8));
-    String utf8Qm = charToStringWithEncoding(63, StandardCharsets.UTF_8);
-    System.out.println(utf8Qm);
-    String isoQmAlt = charToStringWithEncoding(8211, StandardCharsets.ISO_8859_1);
-    System.out.println(isoQmAlt);
-    String isoQm = charToStringWithEncoding(63, StandardCharsets.ISO_8859_1);
-    System.out.println(isoQm);
-
-    System.out.println(StringUtils.equals(utf8Qm, isoQmAlt));
-    System.out.println(StringUtils.equals(utf8Qm, isoQm));
-    System.out.println(StringUtils.equals(isoQmAlt, isoQm));
-
-    System.out.println(utf8Qm.equals(isoQmAlt));
-    System.out.println(utf8Qm.equals(isoQm));
-    System.out.println(isoQmAlt.equals(isoQm));
+  public static String removePostfix(String original, String postfix) {
+    if (original.endsWith(postfix)) {
+      return original.substring(0, original.length() - postfix.length());
+    }
+    return original;
   }
 
   private static String getAlphaNumericCharactersOnly(String pageTitle) {
