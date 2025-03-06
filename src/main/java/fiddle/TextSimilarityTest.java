@@ -8,7 +8,7 @@ public class TextSimilarityTest {
     String generatedText = "This is the AI-generated text.";
     String referenceText = "This is the reference text.";
 
-    Double apply = new JaccardSimilarity().apply(generatedText, referenceText);
+    var apply = new JaccardSimilarity().apply(generatedText, referenceText);
     System.out.println(apply);
   }
 }

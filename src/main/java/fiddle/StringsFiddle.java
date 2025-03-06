@@ -1,23 +1,34 @@
 package fiddle;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.WordUtils;
 
 public class StringsFiddle {
   public static void main(String[] args) {
-    String str =
-        "This rule will affect 12 transactions.\n" + "\n" + "Would you like to apply the rule?";
-    System.out.println(
-        str.matches("This rule will affect \\d+ transactions\\.\\n+Would you like to apply the rule\\?"));
+    var str = "202, 201, 203, 204";
+    List<String> list =
+        Arrays.stream(str.split(",")).map(StringUtils::trim).map(e -> "$" + e + ".00").toList();
+    System.out.printf("\"%s\"%n", String.join("\", \"", list));
 
-    System.out.println("Always ignore transactions from Credit Card (**1356)".matches("Always ignore transactions from .*"));
-    System.out.println("Always mark Credit Card (**1356) transactions as recurring".matches("Always mark .* transactions as recurring"));
-    System.out.println("Always modify 'Credit Card (**1356)' transactions as follows: a) set to 'ignore' and b) mark as recurring".matches("Always modify '.*' transactions as follows: a\\) set to 'ignore' and b\\) mark as recurring"));
-    System.out.println(("Always modify 'Credit Card (**1356)' transactions as follows: a) categorize " +
-            "as 'Auto & Transport', b) prioritize as 'must-have', c) set to 'ignore', d) mark as " +
-            "recurring, and e) label as 'Birthday'")
-            .matches("Always modify '.*' transactions as follows: a\\) categorize " +
-            "as '.*', b\\) prioritize as 'must-have', c\\) set to 'ignore', d\\) mark as " +
-            "recurring, and e\\) label as '.*'"));
+    String x = "test?123";
+    System.out.println(x.substring(0, x.indexOf("?")));
+
+    System.out.println("Inalotom1".replaceAll("\\D", ""));
+
+    String s = "Uber\nAlways modify as";
+    System.out.println(s.substring(s.indexOf("Always")));
+
+    System.out.println(
+        StringSubstitutor.replace(
+            "Test ${firstname} ${surname} ${firstname}",
+            Map.of("firstname", "Kshitij", "surname", "Dhakal")));
+
+    System.out.println(WordUtils.capitalize("kshitij dhakal 123 check"));
   }
 
   public static String removePostfix(String original, String postfix) {

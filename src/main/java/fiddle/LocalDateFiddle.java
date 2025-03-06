@@ -1,6 +1,6 @@
 package fiddle;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -14,5 +14,15 @@ public class LocalDateFiddle {
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
             .toFormatter();
     System.out.println(LocalDate.parse("Jan 23", df));
+
+    System.out.println(LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC));
+    ZoneId zoneId = ZoneId.of("America/New_York");
+    System.out.println(LocalDate.now().atTime(LocalTime.MAX).atZone(zoneId).toEpochSecond());
+
+    LocalDate mar31 = LocalDate.of(2024, 3, 31);
+    System.out.println(mar31.minusMonths(1));
+    System.out.println(mar31.minusDays(1).minusMonths(1));
+
+    System.out.println(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
   }
 }

@@ -9,6 +9,14 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class DateParser {
+  public static void main(String[] args) {
+    System.out.println(new DateParser().getDateOnBalanceSection());
+    System.out.println("-3.5 test".replaceAll("[^\\d-.]", ""));
+
+    System.out.println(
+        LocalDate.parse("Oct 25, 2024", DateTimeFormatter.ofPattern("MMM dd, yyyy")));
+  }
+
   public LocalDate getDateOnBalanceSection() {
     String balanceSectionTextTrimmed = "$3,110 as of Apr 27, 2015 • update";
     var pattern = Pattern.compile("\\$[\\d,]+ as of ([A-Za-z]{3} \\d{1,2}(, \\d{4})?) • update");
@@ -26,10 +34,5 @@ public class DateParser {
       formatter = DateTimeFormatter.ofPattern("MMM d");
     }
     return LocalDate.parse(group, formatter);
-  }
-
-  public static void main(String[] args) {
-    System.out.println(new DateParser().getDateOnBalanceSection());
-    System.out.println("-3.5 test".replaceAll("[^\\d-.]", ""));
   }
 }
