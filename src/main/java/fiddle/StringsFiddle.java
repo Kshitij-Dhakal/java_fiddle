@@ -29,6 +29,8 @@ public class StringsFiddle {
             Map.of("firstname", "Kshitij", "surname", "Dhakal")));
 
     System.out.println(WordUtils.capitalize("kshitij dhakal 123 check"));
+
+    System.out.println("Hello Ryan".substring("Hello ".length()));
   }
 
   public static String removePostfix(String original, String postfix) {

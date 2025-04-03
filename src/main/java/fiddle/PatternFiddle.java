@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 public class PatternFiddle {
+
+  public static final String AMOUNT_REGEX = "-?\\$?-?[\\d.]+";
+
   public static void main(String[] args) {
     var str =
         "<td valign=\"top\" align=\"left\" width=\"100%\" style=\"border-collapse:collapse\">\n"
@@ -33,5 +36,25 @@ public class PatternFiddle {
     while (matcher.matches()) {
       System.out.println(matcher.group());
     }
+    System.out.println("$5".matches(AMOUNT_REGEX));
+    System.out.println("$-5".matches(AMOUNT_REGEX));
+    System.out.println("-$5".matches(AMOUNT_REGEX));
+    System.out.println("$5.5".matches(AMOUNT_REGEX));
+    System.out.println("-$5.5".matches(AMOUNT_REGEX));
+    System.out.println("$-5.5".matches(AMOUNT_REGEX));
+
+    System.out.println("5".matches(AMOUNT_REGEX));
+    System.out.println("-5".matches(AMOUNT_REGEX));
+    System.out.println("-5".matches(AMOUNT_REGEX));
+    System.out.println("5.5".matches(AMOUNT_REGEX));
+    System.out.println("-5.5".matches(AMOUNT_REGEX));
+    System.out.println("-5.5".matches(AMOUNT_REGEX));
+
+    System.out.println("https://efdevhub.info/home/accounts".matches("accounts/.+"));
+    String url = "https://efdevhub.info/home/accounts/";
+    System.out.println(url.matches("accounts/.+"));
+    System.out.println("https://efdevhub.info/home/accounts/7019762896".substring(url.length()));
+    System.out.println(
+        "https://efdevhub.info/home/accounts/WH-296938644196".substring(url.length()));
   }
 }

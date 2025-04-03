@@ -30,7 +30,7 @@ public class BooleanArrayFiddle {
             }
           }
 
-            result[i][j] = aboveFalse || leftFalse;
+          result[i][j] = aboveFalse || leftFalse;
         } else {
           result[i][j] = false;
         }

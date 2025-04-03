@@ -395,3 +395,5 @@ gradle-app.setting
 source.csv
 out.csv
 .idea/
+/src/main/resources/static/crontab
+/src/main/resources/static/test

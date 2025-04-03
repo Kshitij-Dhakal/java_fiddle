@@ -1,11 +1,10 @@
 package fiddle;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class DateParser {
