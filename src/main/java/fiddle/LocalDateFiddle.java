@@ -36,18 +36,33 @@ public class LocalDateFiddle {
     System.out.println(calculateDueDateBasedOnDateReported(dateReported.minusDays(3), true));
     System.out.println(calculateDueDateBasedOnDateReported(dateReported.minusDays(4), true));
 
-    System.out.println("<<< Synced >>>");
-    for (int i = 0; i < 31; i++) {
+    System.out.println("<<< Push Synced >>>");
+    for (int i = 0; i < 30; i++) {
       System.out.printf("%d => %s%n", i + 1, nextXthDayOfTheMonth(i + 1, true));
     }
-    System.out.println("<<< Not Synced >>>");
-    for (int i = 0; i < 31; i++) {
+    System.out.println("<<< Push Not Synced >>>");
+    for (int i = 0; i < 30; i++) {
       System.out.printf("%d => %s%n", i + 1, nextXthDayOfTheMonth(i + 1, false));
     }
-    System.out.println("<<< Date reported >>>");
-    for (int i = 0; i < 31; i++) {
+    System.out.println("<<< Date reported Synced >>>");
+    for (int i = 0; i < 30; i++) {
       System.out.printf("%d => %s%n", i + 1, calculateDueDateBasedOnDateReported(i + 1, true));
     }
+    System.out.println("<<< Date reported Not Synced >>>");
+    for (int i = 0; i < 30; i++) {
+      System.out.printf("%d => %s%n", i + 1, calculateDueDateBasedOnDateReported(i + 1, true));
+    }
+
+    System.out.println("<<< Days after >>>");
+    for (int i = 0; i < 20; i++) {
+      int dayOfMonth = i + 1;
+      var ld = LocalDate.now().withDayOfMonth(dayOfMonth);
+      var diff = ld.getDayOfMonth() - 4;
+      System.out.printf("%d => %s %b%n", dayOfMonth, diff, diff > 9);
+    }
+
+
+
   }
 
   public static LocalDate calculateDueDateBasedOnDateReported(int date, boolean synced) {
@@ -61,7 +76,12 @@ public class LocalDateFiddle {
   }
 
   public static LocalDate nextXthDayOfTheMonth(int dayOfMonth, boolean synced) {
-    var dueDate = LocalDate.now().minusMonths(1).withDayOfMonth(dayOfMonth);
+    LocalDate dueDate;
+    if (dayOfMonth > LocalDate.now().lengthOfMonth()) {
+      dueDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+    } else {
+      dueDate = LocalDate.now().withDayOfMonth(dayOfMonth);
+    }
     if (dueDate.getDayOfMonth() > 28) {
       dueDate = dueDate.withDayOfMonth(dueDate.lengthOfMonth());
     }
@@ -69,13 +89,7 @@ public class LocalDateFiddle {
       if (dueDate.plusDays(9).isBefore(LocalDate.now())) {
         dueDate = dueDate.plusMonths(1);
       }
-      if (dueDate.plusDays(9).isBefore(LocalDate.now())) {
-        dueDate = dueDate.plusMonths(1);
-      }
     } else {
-      if (dueDate.isBefore(LocalDate.now())) {
-        dueDate = dueDate.plusMonths(1);
-      }
       if (dueDate.isBefore(LocalDate.now())) {
         dueDate = dueDate.plusMonths(1);
       }

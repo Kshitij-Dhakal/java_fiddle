@@ -31,6 +31,9 @@ public class StringsFiddle {
     System.out.println(WordUtils.capitalize("kshitij dhakal 123 check"));
 
     System.out.println("Hello Ryan".substring("Hello ".length()));
+
+    String ssn = "666416237";
+    System.out.println(ssn.substring(ssn.length() - 4));
   }
 
   public static String removePostfix(String original, String postfix) {

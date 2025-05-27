@@ -844,6 +844,32 @@ public class RegexUtils {
         extractUsingRegex(
             "API response: {\"responses\":[{\"private_id\":2131478674,\"email\":\"ef_1741285257118@evolutionfinance.com\",\"status\":\"SUCCESS\"}]}\n",
             "\"private_id\":(\\d*),"));
+
+    System.out.println(extractUsingRegex("$50 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+        extractUsingRegex(
+            "$70 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(extractUsingRegex("$50.00 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+            extractUsingRegex(
+                    "$70.00 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(extractUsingRegex("$-50 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+            extractUsingRegex(
+                    "$-70 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(extractUsingRegex("$-50.00 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+            extractUsingRegex(
+                    "$-70.00 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(extractUsingRegex("-$50 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+            extractUsingRegex(
+                    "-$70 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(extractUsingRegex("-$50.00 payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+    System.out.println(
+            extractUsingRegex(
+                    "-$70.00 minimum payment due on", "\\$([\\d-,.]*) (minimum )?payment due on"));
+
   }
 
   public static List<String> extractUsingRegex(String text, String regex) {
