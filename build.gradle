@@ -12,8 +12,15 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    jacksonVersion = '2.19.1'
+}
 
 dependencies {
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+
     implementation 'org.apache.commons:commons-text:1.11.0'
     implementation 'com.opencsv:opencsv:5.6'
     implementation 'org.jsoup:jsoup:1.17.2'
