@@ -65,8 +65,7 @@ public class TransactionMapper {
       record.setPostedDate(record.getTransactionDate());
 
       // Categorization
-      var cat =
-          new TxPushTransaction.TransactionRecord.Categorization();
+      var cat = new TxPushTransaction.TransactionRecord.Categorization();
       cat.setNormalizedPayeeName(t.get("userDisplayMerchantName").asText(null));
       var categoryName = t.get("categoryName").asText(null);
       cat.setCategory(StringUtils.replace(categoryName, "Other - ", ""));
@@ -104,6 +103,7 @@ public class TransactionMapper {
   public static void main(String[] args) {
     var json = ResourceUtils.readResourceAsString("wh/transaction.json");
     var map = TransactionMapper.map(json);
-    ResourceUtils.writeStringToFile("out/tx_trans.json", objectMapper.writeValueAsString(map));
+    ResourceUtils.writeStringToFile(
+        "out/tx_trans.json", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(map));
   }
 }
