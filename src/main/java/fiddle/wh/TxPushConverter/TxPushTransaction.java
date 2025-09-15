@@ -36,6 +36,8 @@ public class TxPushTransaction {
         private String ofxCheckNumber;
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private Integer dateOffset;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String priority;
         @Data
         public static class Categorization {
             private String normalizedPayeeName;
