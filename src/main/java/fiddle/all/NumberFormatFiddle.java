@@ -60,12 +60,10 @@ public class NumberFormatFiddle {
     System.out.println(Math.round(5.8));
     System.out.println(Math.round(5.9));
 
-
-    System.out.println("Estimated: $44.00".replaceAll("[^\\d$.,-]",""));
-    System.out.println("Estimated: $44.44".replaceAll("[^\\d$.,-]",""));
-    System.out.println("Estimated: -$44.00".replaceAll("[^\\d$.,-]",""));
-    System.out.println("Estimated: $-44.00".replaceAll("[^\\d$.,-]",""));
-    System.out.println("Estimated: $-4,4.00".replaceAll("[^\\d$.,-]",""));
-
+    System.out.println("Estimated: $44.00".replaceAll("[^\\d$.,-]", ""));
+    System.out.println("Estimated: $44.44".replaceAll("[^\\d$.,-]", ""));
+    System.out.println("Estimated: -$44.00".replaceAll("[^\\d$.,-]", ""));
+    System.out.println("Estimated: $-44.00".replaceAll("[^\\d$.,-]", ""));
+    System.out.println("Estimated: $-4,4.00".replaceAll("[^\\d$.,-]", ""));
   }
 }

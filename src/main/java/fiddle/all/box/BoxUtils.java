@@ -7,8 +7,8 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class BoxUtils {
-  private static BoxDeveloperEditionAPIConnection api;
   private static final BoxDetails boxDetails = new MyBoxDetails();
+  private static BoxDeveloperEditionAPIConnection api;
 
   @SneakyThrows
   public static void connect() {

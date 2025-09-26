@@ -7,7 +7,7 @@ import org.example.grpc.HelloRequest;
 import org.example.grpc.HelloServiceGrpc;
 
 @Slf4j
-public class Main {
+public class GrpcClientMain {
   public static void main(String[] args) {
     var channel = ManagedChannelBuilder.forAddress("localhost", 9000).usePlaintext().build();
     var stub = HelloServiceGrpc.newBlockingStub(channel);

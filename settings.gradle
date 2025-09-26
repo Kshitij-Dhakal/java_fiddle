@@ -1,3 +1,4 @@
 rootProject.name = 'java_fiddle'
+include 'common-grpc'
 include 'grpc_server'
 include 'grpc_client'

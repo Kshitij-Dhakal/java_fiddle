@@ -93,8 +93,8 @@ public class TransactionMapper {
       // Categorization
       var cat = new TxPushTransaction.TransactionRecord.Categorization();
       cat.setNormalizedPayeeName(t.get("userDisplayMerchantName").asText(null));
-      //var categoryName = t.get("categoryName").asText(null);
-      //cat.setCategory(StringUtils.replace(categoryName, "Other - ", ""));
+      // var categoryName = t.get("categoryName").asText(null);
+      // cat.setCategory(StringUtils.replace(categoryName, "Other - ", ""));
       cat.setCategory(t.get("parentCategoryName").asText());
       cat.setBestRepresentation(t.get("whDisplayCategoryName").asText(null));
       cat.setCountry("USA");

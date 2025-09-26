@@ -6,7 +6,7 @@ import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Main {
+public class GrpcServerMain {
   public static void main(String[] args) {
     int port = 9000;
     Server server = ServerBuilder.forPort(port).addService(new HelloController()).build();

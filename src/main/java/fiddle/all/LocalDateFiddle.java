@@ -60,9 +60,6 @@ public class LocalDateFiddle {
       var diff = ld.getDayOfMonth() - 4;
       System.out.printf("%d => %s %b%n", dayOfMonth, diff, diff > 9);
     }
-
-
-
   }
 
   public static LocalDate calculateDueDateBasedOnDateReported(int date, boolean synced) {
