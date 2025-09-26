@@ -1,5 +1,8 @@
 package fiddle.all;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class VirtualThreadDemo {
   public static void main(String[] args) throws InterruptedException {
 
@@ -10,12 +13,14 @@ public class VirtualThreadDemo {
     Thread[] threads = new Thread[count];
 
     for (int i = 0; i < count; i++) {
+      int finalI = i;
       threads[i] =
           Thread.ofVirtual()
               .start(
                   () -> {
                     try {
                       Thread.sleep(100); // Sleep doesn't block the OS thread!
+                      log.info("Done waiting for {}", finalI);
                     } catch (InterruptedException e) {
                       Thread.currentThread().interrupt();
                     }
@@ -27,6 +32,6 @@ public class VirtualThreadDemo {
     }
 
     long end = System.currentTimeMillis();
-    System.out.println("Done in " + (end - start) + "ms");
+    log.info("Done in {} ms", (end - start));
   }
 }
