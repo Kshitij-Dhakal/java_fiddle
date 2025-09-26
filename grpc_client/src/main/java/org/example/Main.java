@@ -2,20 +2,20 @@ package org.example;
 
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.example.grpc.HelloRequest;
 import org.example.grpc.HelloServiceGrpc;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+@Slf4j
 public class Main {
   public static void main(String[] args) {
     var channel = ManagedChannelBuilder.forAddress("localhost", 9000).usePlaintext().build();
     var stub = HelloServiceGrpc.newBlockingStub(channel);
     try {
-      var response = stub.sayHello(HelloRequest.newBuilder().build());
-      System.out.println(response);
+      var response = stub.sayHello(HelloRequest.newBuilder().setName("John").build());
+      log.info("Response : {}", response);
     } catch (StatusRuntimeException e) {
-      System.err.println("Status : " + e.getStatus());
+      log.error("Status : {}", e.getStatus());
     }
   }
 }
