@@ -1,4 +1,3 @@
 rootProject.name = 'java_fiddle'
-include 'kafka'
 include 'grpc_server'
 include 'grpc_client'

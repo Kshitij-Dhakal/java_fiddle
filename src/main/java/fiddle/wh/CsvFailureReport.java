@@ -19,7 +19,7 @@ public class CsvFailureReport {
     try (var inputStream =
         CsvFailureReport.class
             .getClassLoader()
-            .getResourceAsStream("static/automated-test-results.csv")) {
+            .getResourceAsStream("company/automated-test-results.csv")) {
       assert inputStream != null;
       try (var reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
           var csvReader = new CSVReaderHeaderAware(reader)) {
