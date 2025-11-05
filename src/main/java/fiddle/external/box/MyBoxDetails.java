@@ -1,4 +1,4 @@
-package fiddle.all.box;
+package fiddle.external.box;
 
 public class MyBoxDetails implements BoxDetails {
   @Override

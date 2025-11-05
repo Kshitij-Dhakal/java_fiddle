@@ -1,4 +1,4 @@
-package fiddle.all.box;
+package fiddle.external.box;
 
 import com.box.sdk.*;
 import java.io.*;

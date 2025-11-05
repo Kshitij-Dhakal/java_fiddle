@@ -1,4 +1,4 @@
-package fiddle.wh.TxPushConverter;
+package fiddle.company.TxPushConverter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

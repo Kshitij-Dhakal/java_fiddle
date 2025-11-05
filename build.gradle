@@ -53,6 +53,7 @@ allprojects {
 }
 
 dependencies {
+    implementation 'io.sentry:sentry:8.23.0'
     implementation 'com.box:box-java-sdk:4.16.3'
     implementation 'com.opencsv:opencsv:5.6'
     implementation 'org.jsoup:jsoup:1.17.2'

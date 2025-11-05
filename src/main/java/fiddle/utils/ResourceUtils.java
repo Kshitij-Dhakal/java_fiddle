@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ResourceUtils {
+
+  private ResourceUtils() {}
+
   /**
    * Reads a file from the resources folder and returns its content as a string.
    *
