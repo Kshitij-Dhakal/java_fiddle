@@ -1,8 +1,8 @@
 package fiddle.external.jira;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import fiddle.external.sentry.JsonUtil;
 import fiddle.utils.AppConfig;
+import fiddle.utils.ResourceUtils;
 import java.io.FileWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,22 +18,22 @@ public class JiraIssueFetcher {
   private static final String JIRA_URL = AppConfig.getInstance().getProperty("jira.api.url");
   private static final String USERNAME = AppConfig.getInstance().getProperty("jira.api.username");
   private static final String API_TOKEN = AppConfig.getInstance().getProperty("jira.api.password");
-  private static final String OUTPUT_FILE = "jira_issues.log";
-  private static final String WORKLOG_FILE = "jira_worklogs_last_day.log";
+  private static final String OUTPUT_FILE = "out/jira/jira_issues.log";
+  private static final String WORKLOG_FILE = "out/jira/jira_worklogs_last_day.log";
 
-  private static final ObjectMapper mapper = new ObjectMapper();
   private static final HttpClient client = HttpClient.newHttpClient();
 
   public static void main(String[] args) throws Exception {
-    List<String> keysToFind = List.of(AppConfig.getInstance().getProperty("jira.api.test.epics").split(","));
-    List<String> assignees =
-        List.of(AppConfig.getInstance().getProperty("jira.api.test.emails").split(","));
+    var keysToFind = List.of(AppConfig.getInstance().getProperty("jira.api.test.epics").split(","));
+    var assignees = List.of(AppConfig.getInstance().getProperty("jira.api.test.emails").split(","));
 
-    Map<String, Integer> rankMap = fetchAndLogSelectedIssues(keysToFind, assignees);
+    var rankMap = fetchAndLogSelectedIssues(keysToFind, assignees);
     log.info("Rank map size: {}", rankMap.size());
+    ResourceUtils.writeStringToFile("out/jira/tasks.json", JsonUtil.toJson(rankMap));
 
-    Map<String, List<String>> userWorklogs = fetchTasksUserWorkedOnLastDay(assignees);
+    var userWorklogs = fetchTasksUserWorkedOnLastDay(assignees);
     log.info("User worklog map size: {}", userWorklogs.size());
+    ResourceUtils.writeStringToFile("out/jira/worklog.json", JsonUtil.toJson(userWorklogs));
   }
 
   public static Map<String, Integer> fetchAndLogSelectedIssues(
@@ -43,7 +43,7 @@ public class JiraIssueFetcher {
 
     String nextPageToken = null;
     var isLast = false;
-    int rankCounter = 1;
+    var rankCounter = 1;
 
     try (var writer = new FileWriter(OUTPUT_FILE, false)) {
       var page = 1;
@@ -67,7 +67,7 @@ public class JiraIssueFetcher {
           break;
         }
 
-        var json = mapper.readTree(responseBody);
+        var json = JsonUtil.readTree(responseBody);
         var issues = json.get("issues");
 
         if (issues != null && issues.isArray()) {
@@ -95,8 +95,8 @@ public class JiraIssueFetcher {
         }
         if (isLast || remainingKeys.isEmpty()) {
           log.info("Stopping because : {} {}", isLast, remainingKeys);
-          log.info("Request body : {}", body);
-          log.info("Response body : {}", responseBody);
+          // log.info("Request body : {}", body);
+          // log.info("Response body : {}", responseBody);
         }
       }
 
@@ -105,11 +105,11 @@ public class JiraIssueFetcher {
     }
   }
 
-  public static Map<String, List<String>> fetchTasksUserWorkedOnLastDay(List<String> assignees)
+  public static Map<String, Set<String>> fetchTasksUserWorkedOnLastDay(List<String> assignees)
       throws Exception {
-    Map<String, List<String>> userToKeys = new HashMap<>();
+    Map<String, Set<String>> userToKeys = new HashMap<>();
 
-    String body = buildWorklogRequestBody(assignees);
+    var body = buildWorklogRequestBody(assignees);
     var request =
         HttpRequest.newBuilder()
             .uri(URI.create(JIRA_URL))
@@ -124,22 +124,25 @@ public class JiraIssueFetcher {
       return userToKeys;
     }
 
-    var json = mapper.readTree(response.body());
-    JsonNode issues = json.get("issues");
+    var json = JsonUtil.readTree(response.body());
+    var issues = json.get("issues");
     try (var writer = new FileWriter(WORKLOG_FILE, false)) {
       if (issues != null && issues.isArray()) {
-        for (JsonNode issue : issues) {
-          String key = issue.path("key").asText();
-          JsonNode worklogs = issue.path("fields").path("worklog").path("worklogs");
+        for (var issue : issues) {
+          var key = issue.path("key").asText();
+          var summary = issue.path("fields").path("summary").asText();
+          var worklogs = issue.path("fields").path("worklog").path("worklogs");
 
           if (worklogs != null && worklogs.isArray()) {
-            for (JsonNode logEntry : worklogs) {
-              String author = logEntry.path("author").path("displayName").asText("");
-              String created = logEntry.path("created").asText();
-              String timeSpent = logEntry.path("timeSpent").asText("");
+            for (var logEntry : worklogs) {
+              var author = logEntry.path("author").path("displayName").asText("");
+              var created = logEntry.path("created").asText();
+              var timeSpent = logEntry.path("timeSpent").asText("");
 
-              userToKeys.computeIfAbsent(author, k -> new ArrayList<>()).add(key);
-              String line = String.format("%s - %s - %s - %s%n", author, key, created, timeSpent);
+              userToKeys.computeIfAbsent(author, k -> new HashSet<>()).add(key);
+              var line =
+                  String.format(
+                      "%s - %s - %s - %s - %s%n", author, key, created, timeSpent, summary);
               writer.write(line);
             }
           }
@@ -171,13 +174,13 @@ public class JiraIssueFetcher {
     if (nextPageToken != null && !nextPageToken.isEmpty()) {
       body.put("nextPageToken", nextPageToken);
     }
-    return mapper.writeValueAsString(body);
+    return JsonUtil.toJson(body);
   }
 
   @SneakyThrows
   private static String buildWorklogRequestBody(List<String> assignees) {
     Map<String, Object> body = new LinkedHashMap<>();
-    String jql =
+    var jql =
         String.format(
             "project = IP2 AND worklogDate >= -1d AND issuetype != Epic%s ORDER BY updated DESC",
             assignees.isEmpty()
@@ -187,7 +190,7 @@ public class JiraIssueFetcher {
     body.put("jql", jql);
     body.put("fields", List.of("summary", "worklog"));
     body.put("maxResults", 100);
-    return mapper.writeValueAsString(body);
+    return JsonUtil.toJson(body);
   }
 
   private static String basicAuth(String username, String token) {
