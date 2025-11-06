@@ -10,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,10 +37,20 @@ public class JiraIssueFetcher {
     ResourceUtils.writeStringToFile("out/jira/worklog.json", JsonUtil.toJson(userWorklogs));
   }
 
-  public static Map<String, Integer> fetchAndLogSelectedIssues(
+  @Data
+  public static class IssueInfo {
+    private int rank;
+    private Map<String, Double> userHours = new HashMap<>();
+
+    public void addWorklog(String user, double hours) {
+      userHours.merge(user, hours, Double::sum);
+    }
+  }
+
+  public static Map<String, IssueInfo> fetchAndLogSelectedIssues(
       List<String> keysToFind, List<String> assignees) throws Exception {
     Set<String> remainingKeys = new HashSet<>(keysToFind);
-    Map<String, Integer> keyRankMap = new LinkedHashMap<>();
+    Map<String, IssueInfo> keyRankMap = new LinkedHashMap<>();
 
     String nextPageToken = null;
     var isLast = false;
@@ -78,7 +89,22 @@ public class JiraIssueFetcher {
             var assignee = issue.path("fields").path("assignee").path("displayName").asText("");
             var status = issue.path("fields").path("status").path("name").asText("");
 
-            keyRankMap.put(key, rankCounter++);
+            var info = new IssueInfo();
+            info.setRank(rankCounter++);
+
+            var worklogs = issue.path("fields").path("worklog").path("worklogs");
+            if (worklogs != null && worklogs.isArray()) {
+              for (var logEntry : worklogs) {
+                var author = logEntry.path("author").path("displayName").asText("");
+                var hours =
+                    logEntry.has("timeSpentSeconds")
+                        ? logEntry.get("timeSpentSeconds").asDouble() / 3600.0
+                        : 0;
+                info.addWorklog(author, hours);
+              }
+            }
+
+            keyRankMap.put(key, info);
             var format = String.format("%s - %s - %s - %s%n", key, status, assignee, summary);
             writer.write(format);
             if (remainingKeys.remove(key)) {
@@ -168,7 +194,7 @@ public class JiraIssueFetcher {
           "project = IP2 AND status IN (\"To Do\", \"Bug\", \"In Progress\") AND issuetype != Epic ORDER BY Rank");
     }
 
-    body.put("fields", List.of("summary", "assignee", "status"));
+    body.put("fields", List.of("summary", "assignee", "status", "worklog"));
     body.put("maxResults", 100);
 
     if (nextPageToken != null && !nextPageToken.isEmpty()) {
